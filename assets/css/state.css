@@ -1,0 +1,6 @@
+/*** various sates modules can be ***/
+
+#calendar-openSlot-component .days li:hover {
+    background: #eee;
+    cursor: pointer;
+}

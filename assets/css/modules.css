@@ -1,0 +1,149 @@
+/*** reusable code ***/
+
+#calendar-openSlot-component h1 {
+    margin: 15px 0px;
+    text-align: center;
+}
+
+    #calendar-openSlot-component ul {
+        list-style:none;
+        clear:both;
+}
+
+    #calendar-openSlot-component li {
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        display: block;
+        float: left;
+        width: 14.2857142857%;
+        padding: 5px;
+        margin-right: -1px;
+    }
+
+    #calendar-openSlot-component ul.weekdays {
+        height: 40px;
+        background: rgb(94, 97, 143);
+    }
+
+    #calendar-openSlot-component ul.weekdays li {
+        text-align: center;
+        text-transform: uppercase;
+        line-height: 20px;
+        border: none;
+        padding: 10px 6px;
+        color: #fff;
+    }
+
+    #calendar-openSlot-component .days li {
+        height: 180px;
+    }    
+
+    #calendar-openSlot-component .date {
+        text-align:center;
+        color: #000;
+        float: right;
+        font-weight: bold;
+        padding: 5px;
+    }
+
+    #calendar-openSlot-component .other-month {
+        background: #e6e6e6;
+     }
+
+     #calendar-openSlot-component .other-month .date{
+        color: #999;
+     }
+
+   #calendar-openSlot-component .booked-icon {
+        width: 50%;
+        height: 50%;
+        margin-left: 25%;
+        margin-top: 15%;
+   }
+
+   #calendar-openSlot-component #app-messages {
+        width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        background: beige;
+        -webkit-border-bottom-right-radius: 5px;
+        -webkit-border-bottom-left-radius: 5px;
+        -moz-border-radius-bottomright: 5px;
+        -moz-border-radius-bottomleft: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-top: none;
+        padding: 10px 0px 20px 0px;
+   }
+
+   #calendar-openSlot-component .app-messages-error {
+        border: 3px solid red;
+        color: red;
+    }
+
+    #calendar-openSlot-component .app-messages-sucess {
+        border: 3px solid rgb(0, 221, 99);
+        color: rgb(0, 221, 99);;
+    }
+
+
+    .tooltip {
+        position: relative;
+        z-index: 20;
+    }
+
+        .tooltip .tooltip-message {
+            display: none;
+        }
+
+        .tooltip:hover {
+            z-index: 21;
+        }
+
+        .tooltip:hover .tooltip-message {
+            display: block;
+            width: auto;
+            height: auto;
+            padding: 10px;
+            color: #000;
+            background: #fff;
+            position: absolute;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            top: 20%;
+            left:0%;
+        }
+
+        .tooltip-message h2 {
+           font-weight: bold;
+        }
+
+        .tooltip-message label {
+            display: block;
+            padding:5px 0;
+         }
+
+         .tooltip-message input {
+              width: 30%;
+         }
+
+         .tooltip-message input {
+            width: 30%;
+        }
+
+       .tooltip-message .find-slot {
+           margin:10px 0;
+           cursor: pointer;
+       }
+
+       .js-form-book-appointment{
+           margin:10px 0;
+       }
+
+       .tooltip-message .set-time{
+           width: 46%;
+       }
+
+       .book-appointment{
+           margin:10px 0;
+       }

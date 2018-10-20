@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="assets/css/styles.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script src="assets/js/messages.js"></script>
+    <script src="assets/js/fetchUsers.js"></script>
+    <script src="assets/js/usersAppointments.js"></script> 
+    <script src="assets/js/findOpenSlot.js"></script>
+    <script src="assets/js/calendar-slot.js"></script>
+    <title>Calendar Slot</title>
+</head>
+<body>
+    <main id="calendar-openSlot-component">
+            <div id="app-messages" class="hidden"></div>
+            <section id="calendar-wrap">        
+                <header>
+                        <h1>October 2018</h1>
+                </header>
+                <div id="calendar" class="l-width-all">
+                    <ul class="weekdays l-width-all">
+                        <li>Sunday</li>
+                        <li>Monday</li>
+                        <li>Tuesday</li>
+                        <li>Wednesday</li>
+                        <li>Thursday</li>
+                        <li>Friday</li>
+                        <li>Saturday</li>
+                    </ul>
+                    <ul class="days l-width-all">
+                          <li class="day l-float-left other-month">
+                              <div class="date l-float-right">30</div>
+                          </li>   
+                          <li class="day l-float-left tooltip">
+                                <div id="date-1" class="date l-float-right">1</div>
+                                <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                          </li>
+                          <li class="day l-float-left tooltip">
+                                <div id="date-2" class="date l-float-right">2</div>
+                                <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                          </li>
+                          <li class="day l-float-left tooltip">
+                                <div id="date-3" class="date l-float-right">3</div>
+                                <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                          </li>
+                          <li class="day l-float-left tooltip">
+                                <div id="date-4" class="date l-float-right">4</div>
+                                <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                          </li>
+                          <li class="day l-float-left tooltip">
+                                <div id="date-5" class="date l-float-right">5</div>
+                                <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                          </li>
+                          <li class="day l-float-left tooltip">
+                                <div id="date-6" class="date l-float-right">6</div>
+                                <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                          </li>
+                    </ul>
+                    <ul class="days l-width-all">
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-7" class="date l-float-right">7</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-8" class="date l-float-right">8</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-9" class="date l-float-right">9</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-10" class="date l-float-right">10</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-11" class="date l-float-right">11</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-12" class="date l-float-right">12</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-13" class="date l-float-right">13</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                      </ul>
+                      <ul class="days l-width-all">
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-14" class="date l-float-right">14</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-15" class="date l-float-right">15</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-16" class="date l-float-right">16</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-17" class="date l-float-right">17</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-18" class="date l-float-right">18</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-19" class="date l-float-right">19</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-20" class="date l-float-right">20</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                      </ul>
+                      <ul class="days l-width-all">
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-21" class="date l-float-right">21</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-22" class="date l-float-right">22</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-23" class="date l-float-right">23</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-24" class="date l-float-right">24</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-25" class="date l-float-right">25</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-26" class="date l-float-right">26</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-27" class="date l-float-right">27</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                      </ul>
+                      <ul class="days l-width-all">
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-28" class="date l-float-right">28</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-29" class="date l-float-right">29</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-30" class="date l-float-right">30</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left tooltip">
+                                  <div id="date-31" class="date l-float-right">31</div>
+                                  <div class="tooltip-message">   <h2></h2>   <div class="js-form-book-appointment form-book-appointment"></div>    </div>
+                            </li>
+                            <li class="day l-float-left other-month">
+                                  <div class="date l-float-right">1</div>
+                            </li>
+                            <li class="day l-float-left other-month">
+                                  <div class="date l-float-right">2</div>
+                            </li>
+                            <li class="day l-float-left other-month">
+                                  <div class="date l-float-right">3</div>
+                            </li>
+                      </ul>
+                </div>
+            </section>
+            <aside id="day-results">
+                <!-- open panel that shows schedule of people of the day that has been selected -->
+            </aside>
+    </main>
+    
+</body>
+</html>

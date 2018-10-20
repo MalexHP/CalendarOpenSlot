@@ -1,0 +1,32 @@
+/*** media queries ***/
+
+/* for time purposes not all the breakpoints were considered, but is just matter of adding the respective media queries if is needed */
+
+@media( max-width: 768px ) {
+    #calendar-openSlot-component .weekdays,
+    #calendar-openSlot-component  .other-month {
+        display: none;
+    }
+
+    #calendar-openSlot-component li {
+        height: auto;
+        border: 1px solid #eeddee;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: -1px;
+    }
+
+    #calendar-openSlot-component .date {
+        float: none;
+    }
+
+    #calendar-openSlot-component .booked-icon {
+        margin-top: 1%;
+    }
+
+    .tooltip:hover span {
+        top: 42%;
+        left: 40%;
+    }
+
+}
