@@ -50,7 +50,7 @@ let findOpenSlot = (function() {
         let usersWithAppointments = resp.filter(user => {
             /* This gets all the users that has an booked appointment,
                from here the script will try to find available time according to the duration set and the chosen day
-            */
+            */ 
             if (user.appointments.length) {
                 return getUsersMatchDay(user.appointments);
             }
