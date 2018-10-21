@@ -1,37 +1,60 @@
+/*
+
+    This files contains all the heavy logic to find an open slot in the User's calendar.
+
+    The names of variables and functions try to be semantic and self explanatory
+
+    The main method here will return an array with objects to render in the UI, once the query was sent and if it was successful:
+
+    [
+    {'dates': 
+            [{'ini':'14:10','end':'15:16'},{'ini':'17:18','end':'21:50'}] //Represents the available time ranges 
+        },
+        {'usersAvailable':4}  // This will display how many users had appointments but still are available in a certain time range
+    ]
+
+    usersAppointments is handling the UI.
+
+
+*/
+
 let findOpenSlot = (function() {
     let userMatch = [];
     let userMatchedId = [];
     let iniRange = 0, endRange = 0;
-    function matchAvailability(e, resp) {
+    
+    function matchAvailability(e, data) {
+        let resp = JSON.parse(JSON.stringify(data));
+        let event = e;
         let init = 0;
         let duration = 30;
+        let matchedElements = [];
+        let freeSchedule = [];
+        let currentDay = 4;
                 
-        let usersWithAppointments = resp.data.filter(user => user.appointments.length !== 0);
-        let totalUsers = usersWithAppointments.length;
-        
-        
-       // let usersWithoutAppointments = resp.data.filter(user => user.appointments.length === 0);
+        let usersWithAppointments = resp.data.filter(user => {
+            if (user.appointments.length) {
+               return getUsersMatchDay(user.appointments);
+            }
+        });
 
         let arrAvailability = usersWithAppointments.map(user => setAppointmentStartEnd(user));
+        let arrAvailabilityLength = arrAvailability.length;
 
         let iterations = (14 * 60) - duration; 
 
         for (let i = 0; i < iterations; i++) {
-           
-          //  console.log(userMatch);
-            if (userMatch.length === usersWithAppointments.length) {
-                break;
+            if (matchedElements.length === usersWithAppointments.length) {
+                matchedElements = [];
             } else {
-                userMatch = findOpenSlot(init,duration);
-               // usersAvailable.push(userMatch);
+                userMatch.push(findOpenSlots(init,duration));
             }
-
             ++init;
             ++duration;
         }
 
-        // console.log('ini final: ' + init);
-        // console.log('duration final: ' + duration);
+        console.log('freeSchedule');
+        console.log(freeSchedule);
        
         let cleanArrUsersAvailable = userMatch.filter( people => people.length > 0);
         console.log('xxxxxxxxxxxxx FINAL VAL xxxxxxxxxxxxxxxxxxx');
@@ -39,44 +62,63 @@ let findOpenSlot = (function() {
         console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
        //alert(cleanArrUsersAvailable);
 
-        function findOpenSlot(ini,duration) { 
-            let cuco = [];
-            for (let j = 0; j < arrAvailability.length; j++) {
+        function getUsersMatchDay(appointments) {
+            let someDayMatch = false;
+            appointments.forEach( days => {
+                if (days.day == currentDay) {
+                    someDayMatch = true;
+                }
+            }); 
+            return someDayMatch;
+        }//End matchAvailability() > getUsersMatchDay();
+
+        function findOpenSlots(ini,duration) {             
+            for (let j = 0; j < arrAvailabilityLength; j++) {               
                // console.log(arrAvailability[j].userId); //aa <= ini && bb <= duration &&
-                if (userMatchedId.indexOf(arrAvailability[j].userId) >= 0) {
-                   // como brincar cuando es más de un objeto matched
-                   console.log('*************************se debe brincar el objeto en cuestion************');
-                } else {
-                    if (findAvailability(arrAvailability[j], ini, duration)) {
-                      console.log('IS A MATCH');
+            //    console.log("INI: " +  ini);
+            //    console.log("INIRANGE: " + iniRange);
+            //    console.log("DURATION: " + duration);
+            //    console.log("ENDRANGE: " + endRange);
+                if (userMatchedId.indexOf(arrAvailability[j].userId) >= 0 && endRange > ini) {
+                   /* This is to avoid doing unnecessary iterations as long 
+                     as the ini and duration values are in the range of the respective person matched */
+                 //   console.log('*************************se debe brincar el objeto en cuestion************');
+                } else {                    
+                    if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
+                      console.log('IS A MATCH');                      
                       console.log("ini: " + ini);
                       console.log("duration: " + duration) 
-                      console.log(arrAvailability[j]);
-                      console.log('****************************');
-                      cuco.push(arrAvailability[j]);                    
+                      console.log(arrAvailability[j]);   
+                      matchedElements.push(arrAvailability[j]);     
+                      console.log(matchedElements);           
+                      console.log('****************************');    
                     }
                 }
             }
-            
-            if (cuco.length === arrAvailability.length) {
+            // console.log(':::::::::::::::::::::::::::');
+            // console.log(matchedElements); 
+            // console.log(':::::::::::::::::::::::::::');
+            if (matchedElements.length === arrAvailabilityLength) {
                 console.log("***********************FULL MATCH YATAHHH*****************");
                 userMatchedId = [];
-                return cuco;                
+                freeSchedule.push({ "initial" : ini, "final": duration});
+                return matchedElements;                
             } else {  
-                console.log('-----still no full matches--------');
+                // console.log('-----still no full matches--------');
                 if (userMatchedId.length) { // Review if it has been matches before perform unnecessary operations
-                    console.log('--no full matches but some matches---');
-                    console.log("ini: " +  ini);
-                    console.log("iniRange: " + iniRange);
-                    console.log("duration: " + duration);
-                    console.log("endRange: " + endRange);
-                    console.log(userMatchedId);
-                    console.log('****************************************');
+                    // console.log('--no full matches but some matches---');
+                    // console.log("ini: " +  ini);
+                    // console.log("iniRange: " + iniRange);
+                    // console.log("duration: " + duration);
+                    // console.log("endRange: " + endRange);
+                    // console.log(userMatchedId);
+                    // console.log(findUserIdsMatches());
+                    // console.log('****************************************');
                     if (iniRange < ini && endRange < duration && findUserIdsMatches()) {
-                        console.log('Reset until the range is fulfilled');
-                        console.log(userMatchedId);
+                        // console.log('Reset until the range is fulfilled');
+                        // console.log(userMatchedId);
                         userMatchedId = [];
-                        console.log('****************************************');
+                        // console.log('****************************************');
                     } 
                 }                             
                 return [];
@@ -84,60 +126,68 @@ let findOpenSlot = (function() {
 
             //Help function
             function findUserIdsMatches(){
-                for (let i = 0; i < arrAvailability.length; i++) {
+                let proveVal;
+                // console.log('::::::::::::::::::::::::');
+                for (let i = 0; i < arrAvailabilityLength; i++) {
+                    // console.log(userMatchedId);
+                    // console.log(arrAvailability[i].userId);
                      if (userMatchedId.indexOf(arrAvailability[i].userId) >= 0) {
-                        return true;
+                        proveVal = true;
+                        break;
                      } else {
-                        return false;
+                        proveVal = false;
                      }
                  }
-            }//End matchAvailability() > findOpenSlot() > findUserIdsMatches()
+                 return proveVal;
+            }//End matchAvailability() > findOpenSlots() > findUserIdsMatches()
 
-        }//End matchAvailability() > findOpenSlot();
+        }//End matchAvailability() > findOpenSlots();
 
         function findAvailability(person, ini, duration) {
             return person.availability.some( bookDay => { 
-                 console.log(person);
-                 console.log(bookDay);
-                 console.log("ini: " + ini);
-                 console.log("duration: " + duration)
-                 console.log("start: " + bookDay.start);                 
-                 console.log("end: " + bookDay.end);
+                let bookDayStart = bookDay.start;
+                let bookDayEnd = bookDay.end;
+                //  console.log(person);
+                //  console.log(bookDay);
+                //  console.log("ini: " + ini);
+                //  console.log("duration: " + duration)
+                //  console.log("start: " + bookDayStart);                 
+                //  console.log("end: " + bookDayEnd);
                 
-                if (ini >= bookDay.start && duration <= bookDay.end) {
+                if (ini >= bookDayStart && duration <= bookDayEnd) {
                     userMatchedId.push(person.userId);
-                    iniRange = bookDay.start;
-                    endRange = bookDay.end;
-                    console.log('ini mayor o igual start y duration menor o igual end');                    
-                    console.log('person.userId: ' + person.userId);
-                    console.log('userMatchedId: ' + userMatchedId);
-                    console.log(person);  
-                    console.log('****************************'); 
+                    iniRange = bookDayStart;
+                    endRange = bookDayEnd;
+                    // console.log('ini mayor o igual start y duration menor o igual end');                    
+                    // console.log('person.userId: ' + person.userId);
+                    // console.log('userMatchedId: ' + userMatchedId);
+                    // console.log(person);  
+                    // console.log('****************************'); 
                     return true;
 
-                } else if (ini > bookDay.start && duration > bookDay.end && ini < bookDay.end && (bookDay.end-ini) >= (duration-ini)) {
+                } else if (ini > bookDayStart && duration > bookDayEnd && ini < bookDayEnd && (bookDayEnd-ini) >= (duration-ini)) {
                    userMatchedId.push(person.userId);
-                   iniRange = bookDay.start;
-                   endRange = bookDay.end;
-                   console.log('ini mayor start y duration mayor end');                   
-                   console.log('person.userId: ' + person.userId);
-                   console.log('userMatchedId: ' + userMatchedId);
-                   console.log(person);  
-                   console.log('****************************'); 
+                   iniRange = bookDayStart;
+                   endRange = bookDayEnd;
+                //    console.log('ini mayor start y duration mayor end');                   
+                //    console.log('person.userId: ' + person.userId);
+                //    console.log('userMatchedId: ' + userMatchedId);
+                //    console.log(person);  
+                //    console.log('****************************'); 
                     return true;
-                } else if (ini < bookDay.start && duration < bookDay.end && duration > bookDay.start && (duration-bookDay.start) >= (duration-ini)) {
+                } else if (ini < bookDayStart && duration < bookDayEnd && duration > bookDayStart && (duration-bookDayStart) >= (duration-ini)) {
                     userMatchedId.push(person.userId);
-                    iniRange = bookDay.start;
-                    endRange = bookDay.end;
-                    console.log('ini menor start y duration mayor start');                    
-                    console.log('person.userId: ' + person.userId);
-                    console.log('userMatchedId: ' + userMatchedId);
-                    console.log(person);  
-                    console.log('****************************'); 
+                    iniRange = bookDayStart;
+                    endRange = bookDayEnd;
+                    // console.log('ini menor start y duration mayor start');                    
+                    // console.log('person.userId: ' + person.userId);
+                    // console.log('userMatchedId: ' + userMatchedId);
+                    // console.log(person);  
+                    // console.log('****************************'); 
                     return true;
                 } else {
-                    console.log('nothing');
-                    console.log('****************************');
+                    // console.log('nothing');
+                    // console.log('****************************');
                     return false;
                 }
             });
@@ -157,7 +207,6 @@ let findOpenSlot = (function() {
         }//End matchAvailability() > setAppointmentStartEnd()
 
     }//End matchAvailability()
-
 
     //FUNCTIONS HELPERS
     // convert typed duration to mins, if necessary
@@ -197,65 +246,5 @@ let findOpenSlot = (function() {
     return {
         matchAvailability: matchAvailability
     }
-
-    /*
-
-[  
-   {  
-      "userId":1,
-      "availability":[  
-         {  
-            "start":640,
-            "end":720
-         },
-         {  
-            "start":600,
-            "end":660
-         }
-      ]
-   },
-   {  
-      "userId":2,
-      "availability":[  
-         {  
-            "start":480,
-            "end":600
-         },
-         {  
-            "start":540,
-            "end":630
-         }
-      ]
-   },
-   {  
-      "userId":6,
-      "availability":[  
-         {  
-            "start":640,
-            "end":720
-         },
-         {  
-            "start":600,
-            "end":660
-         }
-      ]
-   },
-   {  
-      "userId":7,
-      "availability":[  
-         {  
-            "start":480,
-            "end":600
-         },
-         {  
-            "start":780,
-            "end":930
-         }
-      ]
-   }
-]
-
-
-    */
 
 })();

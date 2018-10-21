@@ -1,7 +1,5 @@
 /*** media queries ***/
 
-/* for time purposes not all the breakpoints were considered, but is just matter of adding the respective media queries if is needed */
-
 @media( max-width: 768px ) {
     #calendar-openSlot-component .weekdays,
     #calendar-openSlot-component  .other-month {

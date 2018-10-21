@@ -1,3 +1,7 @@
+/*
+  This file handles all the modal or pop up messages might be needed.
+*/
+
 let messages = (function(){
 
     function displayMessage(type, message) {
@@ -14,7 +18,7 @@ let messages = (function(){
 
         modalMessages.innerHTML = message;
 
-        setTimeout(() => modalMessages.classList.add('hidden'),2000);
+        setTimeout(() => modalMessages.classList.add('hidden'),2500);
     }
 
     return {

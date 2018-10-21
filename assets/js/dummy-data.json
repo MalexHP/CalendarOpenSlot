@@ -15,7 +15,7 @@
                         "subject" : "Discuss something 2",
                         "day" : "11",
                         "start" : "0:00",
-                        "end" : "1:00"
+                        "end" : "6:00"
                     }
                 ]
             },
@@ -32,8 +32,8 @@
                     {
                         "subject" : "Work something 2",
                         "day" : "27",
-                        "start" : "14:00",
-                        "end" : "23:30"
+                        "start" : "2:00",
+                        "end" : "4:30"
                     }
                 ]
             },
@@ -65,8 +65,8 @@
                     {
                         "subject" : "Develop 2",
                         "day" : "31",
-                        "start" : "23:00",
-                        "end" : "24:00"
+                        "start" : "1:30",
+                        "end" : "5:00"
                     }
                 ]
             },
@@ -77,8 +77,8 @@
                     {
                         "subject" : "Planning  1",
                         "day" : "25",
-                        "start" : "1:30",
-                        "end" : "2:00"
+                        "start" : "3:30",
+                        "end" : "7:00"
                     },
                     {
                         "subject" : "Planning 2",
@@ -95,15 +95,15 @@
 
                     {
                         "subject" : "Merging  1",
-                        "day" : "15",
-                        "start" : "3:30",
-                        "end" : "4:00"
+                        "day" : "4",
+                        "start" : "4:10",
+                        "end" : "7:30"
                     },
                     {
                         "subject" : "Merging 2",
                         "day" : "23",
-                        "start" : "11:00",
-                        "end" : "11:30"
+                        "start" : "23:30",
+                        "end" : "23:50"
                     }
                 ]
             }
