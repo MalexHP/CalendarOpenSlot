@@ -74,6 +74,8 @@
         border-bottom-left-radius: 5px;
         border-top: none;
         padding: 10px 0px 20px 0px;
+        opacity: 0;
+        transition: 0.5s opacity;
    }
 
    #calendar-openSlot-component .app-messages-error {
@@ -110,11 +112,11 @@
             position: absolute;
             border: 1px solid #ccc;
             font-size: 12px;
-            top: 20%;
+            top: 15%;
             left:0%;
         }
 
-        .tooltip-message h2 {
+        .tooltip-message .tooltip-title {
            font-weight: bold;
         }
 
@@ -147,3 +149,11 @@
        .book-appointment{
            margin:10px 0;
        }
+
+       .messages-modal {
+          width: 100%;
+          position: absolute;
+          top: 0;
+       }
+
+      
