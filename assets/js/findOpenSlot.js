@@ -1,150 +1,141 @@
-let findOpenSlot = (function() {
-    let userMatch = [];
-    let userMatchedId = [];
-    let iniRange = 0, endRange = 0;
-    function matchAvailability(e, resp) {
-        let init = 0;
-        let duration = 30;
-                
-        let usersWithAppointments = resp.data.filter(user => user.appointments.length !== 0);
-        let totalUsers = usersWithAppointments.length;
-        
-        
-       // let usersWithoutAppointments = resp.data.filter(user => user.appointments.length === 0);
+/*
+    This files contains the logic to find an open slot in the User's calendar.
 
-        let arrAvailability = usersWithAppointments.map(user => setAppointmentStartEnd(user));
+    The names of variables and functions try to be semantic and self explanatory
 
-        let iterations = (14 * 60) - duration; 
+    The matchAvailability method here will return an array with objects to render in the UI through usersAppointment, 
+    once the query was sent and if it was successful. This is the object format that will be returned:
 
-        for (let i = 0; i < iterations; i++) {
-           
-          //  console.log(userMatch);
-            if (userMatch.length === usersWithAppointments.length) {
-                break;
-            } else {
-                userMatch = findOpenSlot(init,duration);
-               // usersAvailable.push(userMatch);
+    [
+        {'dates': 
+            [{'ini':'14:10','end':'15:16'},{'ini':'17:18','end':'21:50'}] //Represents the available time ranges 
+        },
+        {'usersAvailable':4}  // This will display how many users had appointments but still are available in a certain time range
+    ]
+
+    The application considers a 24 hrs window of open possibilities.
+
+    The application will receive an object with all the info needed:
+    
+            objConfig = {
+                "currentDay": currentDay,
+                "localData": localData,
+                "durationTime": durationTime,
+                "minsHours": minsHours
             }
+*/
 
+let findOpenSlot = (function() {
+    /* iniRange and  endRange will be set once the first match occurred, so the iteration for this object will be avoided 
+       untill ini and duration are out of range, meaning that there are no intersections 
+    */
+    function matchAvailability(objConfig) { 
+        let resp = JSON.parse(JSON.stringify(objConfig.localData));
+        let currentDay = objConfig.currentDay;
+        // checkin and checkout represents the working time
+        let checkIn = minsConverter(8, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
+        let checkOut = minsConverter(18, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
+        let init = checkIn; // init is used as the starting point to find an intersection in the time range of the user's availability
+        let duration = checkIn + minsConverter(parseInt(objConfig.durationTime), objConfig.minsHours); // duration is the end point of the intersection, taking care of the duration range set in the query        
+        let matchedElements = []; // This array will hold all the open slots        
+        let openSlots = [];
+        let usersAvailable;
+        let usersWithAppointments = resp.filter(user => {
+            /* This gets all the users that has an booked appointment,
+               from here the script will try to find available time according to the duration set and the chosen day.
+               Caveat: Will return the user with at least one matched day, but appointments has also other days.
+               This can be fixed redefining the dummy-data json.
+               This is fixed provisionally in getUsersMatchDay()
+            */ 
+            if (user.appointments.length) { // The {} could be omitted, but I think is a good practice to use them to define the block   
+                return getUsersMatchDay(user.appointments);
+            }
+        });
+
+        // Creates a formated object, from the users with booked appointments, needed for future work      
+        let arrAvailability = usersWithAppointments.map(user => appointmentStartEnd(user));
+ 
+        let arrAvailabilityLength = arrAvailability.length; // This catch the length, because the value is used more than once and this helps performance
+        
+        let startMeasureTime = new Date().getTime(); // Execution time test variable
+
+        for (let i = checkIn; i <= checkOut; i++) { 
+            /*
+              This loop will iterate all the working day range, to find all possible intersections according to duration.
+              One person could have more than one open slot, that is why the loop does not break.
+            */
+            findOpenSlots(init, duration)
             ++init;
             ++duration;
         }
 
-        // console.log('ini final: ' + init);
-        // console.log('duration final: ' + duration);
-       
-        let cleanArrUsersAvailable = userMatch.filter( people => people.length > 0);
-        console.log('xxxxxxxxxxxxx FINAL VAL xxxxxxxxxxxxxxxxxxx');
-        console.log(cleanArrUsersAvailable);
-        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-       //alert(cleanArrUsersAvailable);
+        let endMeasureTime = new Date().getTime(); // Execution time test variable
+        let finalExecutionTime = endMeasureTime - startMeasureTime; // Execution time test variable
+       //  console.log('Execution time: ' + finalExecutionTime); // Execution time test
 
-        function findOpenSlot(ini,duration) { 
-            let cuco = [];
-            for (let j = 0; j < arrAvailability.length; j++) {
-               // console.log(arrAvailability[j].userId); //aa <= ini && bb <= duration &&
-                if (userMatchedId.indexOf(arrAvailability[j].userId) >= 0) {
-                   // como brincar cuando es más de un objeto matched
-                   console.log('*************************se debe brincar el objeto en cuestion************');
-                } else {
-                    if (findAvailability(arrAvailability[j], ini, duration)) {
-                      console.log('IS A MATCH');
-                      console.log("ini: " + ini);
-                      console.log("duration: " + duration) 
-                      console.log(arrAvailability[j]);
-                      console.log('****************************');
-                      cuco.push(arrAvailability[j]);                    
-                    }
+        openSlots.length ? usersAvailable = arrAvailabilityLength : usersAvailable = 0;
+
+        //HELP FUNCTIONS
+        function getUsersMatchDay(appointments) { // Gets the users that has an appointment in the selected day
+            let someDayMatch = false;            
+            for (let i=0; i < appointments.length; i++) {
+                if (appointments[i].day == currentDay) {
+                    someDayMatch = true;
+                } else { 
+                    /* This is a cheap way to fix the issue with the structure of the data received, this approach could be better
+                       {
+                           "day": X,
+                           "dayDetails" : [] // Array of all the details of the appointments of the day X (subject, start, end)
+                       }
+                    */
+                    appointments[i].start = 1; // Nobody makes appointments of work at 1:00 am
+                    appointments[i].end = 1;
                 }
             }
-            
-            if (cuco.length === arrAvailability.length) {
-                console.log("***********************FULL MATCH YATAHHH*****************");
-                userMatchedId = [];
-                return cuco;                
-            } else {  
-                console.log('-----still no full matches--------');
-                if (userMatchedId.length) { // Review if it has been matches before perform unnecessary operations
-                    console.log('--no full matches but some matches---');
-                    console.log("ini: " +  ini);
-                    console.log("iniRange: " + iniRange);
-                    console.log("duration: " + duration);
-                    console.log("endRange: " + endRange);
-                    console.log(userMatchedId);
-                    console.log('****************************************');
-                    if (iniRange < ini && endRange < duration && findUserIdsMatches()) {
-                        console.log('Reset until the range is fulfilled');
-                        console.log(userMatchedId);
-                        userMatchedId = [];
-                        console.log('****************************************');
-                    } 
-                }                             
-                return [];
+            return someDayMatch;
+        } //End matchAvailability() > getUsersMatchDay();
+
+        function findOpenSlots(ini, duration) {
+            for (let j = 0; j < arrAvailabilityLength; j++) {
+                if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
+                    matchedElements.push(arrAvailability[j]);
+                }
+            }
+            if (matchedElements.length === arrAvailabilityLength) {
+                // All users have to be available according to the requirement
+                openSlots.push({ //Saves the open slot where all the users with appointments are available for the "duration" time
+                    "ini": minsConverter(ini, 'turn'),
+                    "end": minsConverter(duration, 'turn')
+                });
+                matchedElements = [];                
+            } else {
+                matchedElements = []; // Resets any saved match
             }
 
-            //Help function
-            function findUserIdsMatches(){
-                for (let i = 0; i < arrAvailability.length; i++) {
-                     if (userMatchedId.indexOf(arrAvailability[i].userId) >= 0) {
-                        return true;
-                     } else {
-                        return false;
-                     }
-                 }
-            }//End matchAvailability() > findOpenSlot() > findUserIdsMatches()
+            return matchedElements;
 
-        }//End matchAvailability() > findOpenSlot();
+        } //End matchAvailability() > findOpenSlots();
 
         function findAvailability(person, ini, duration) {
-            return person.availability.some( bookDay => { 
-                 console.log(person);
-                 console.log(bookDay);
-                 console.log("ini: " + ini);
-                 console.log("duration: " + duration)
-                 console.log("start: " + bookDay.start);                 
-                 console.log("end: " + bookDay.end);
-                
-                if (ini >= bookDay.start && duration <= bookDay.end) {
-                    userMatchedId.push(person.userId);
-                    iniRange = bookDay.start;
-                    endRange = bookDay.end;
-                    console.log('ini mayor o igual start y duration menor o igual end');                    
-                    console.log('person.userId: ' + person.userId);
-                    console.log('userMatchedId: ' + userMatchedId);
-                    console.log(person);  
-                    console.log('****************************'); 
-                    return true;
+            return person.availability.some(bookDay => {
+                /*
+                    Each user can have more than one appointment in a day,
+                    it is not possible to have two appointments in a day at the same hours,
+                    that is why only it is needed a result (some)
+                */
+                let bookDayStart = bookDay.start; // The bookDay.start and bookDay.end values are catched
+                let bookDayEnd = bookDay.end;
 
-                } else if (ini > bookDay.start && duration > bookDay.end && ini < bookDay.end && (bookDay.end-ini) >= (duration-ini)) {
-                   userMatchedId.push(person.userId);
-                   iniRange = bookDay.start;
-                   endRange = bookDay.end;
-                   console.log('ini mayor start y duration mayor end');                   
-                   console.log('person.userId: ' + person.userId);
-                   console.log('userMatchedId: ' + userMatchedId);
-                   console.log(person);  
-                   console.log('****************************'); 
-                    return true;
-                } else if (ini < bookDay.start && duration < bookDay.end && duration > bookDay.start && (duration-bookDay.start) >= (duration-ini)) {
-                    userMatchedId.push(person.userId);
-                    iniRange = bookDay.start;
-                    endRange = bookDay.end;
-                    console.log('ini menor start y duration mayor start');                    
-                    console.log('person.userId: ' + person.userId);
-                    console.log('userMatchedId: ' + userMatchedId);
-                    console.log(person);  
-                    console.log('****************************'); 
+                if (ini >= bookDayStart && duration <= bookDayEnd) {
                     return true;
                 } else {
-                    console.log('nothing');
-                    console.log('****************************');
                     return false;
                 }
             });
-        }//End matchAvailability() > findAvailability();
+        } //End matchAvailability() > findAvailability();
 
-        function setAppointmentStartEnd(user) {
-            let availability = user.appointments.map( endStart => {
+        function appointmentStartEnd(user) {
+            let availability = user.appointments.map(endStart => {
                 return {
                     "start": minsConverter(endStart.start, 'hrs'),
                     "end": minsConverter(endStart.end, 'hrs'),
@@ -154,22 +145,29 @@ let findOpenSlot = (function() {
                 "userId": user.userId,
                 "availability": availability
             }
-        }//End matchAvailability() > setAppointmentStartEnd()
+        } //End matchAvailability() > appointmentStartEnd(
+        
+        return [{
+                'dates': openSlots
+            },
+            {
+                'usersAvailable': usersAvailable
+            }
+        ];
 
-    }//End matchAvailability()
+    } //End matchAvailability()
 
-
-    //FUNCTIONS HELPERS
-    // convert typed duration to mins, if necessary
+    // HELP FUNCTIONS   
     function minsConverter(hour, hourType) {
+        // This will transform hours (hh:mm) into minutes and the other way around
         if (!isNaN(hour)) {
             hour = hour.toString();
         }
         let convertedMins = 0;
         if (hourType === 'mins') {
-            convertedMins = hour;
+            convertedMins = parseInt(hour);
         } else if (hourType === 'hrs') {
-            if (hour.includes(':')) { 
+            if (hour.includes(':')) {
                 let mins = hour.split(':');
                 if (mins[0] === '24') {
                     mins[0] = '0';
@@ -186,10 +184,9 @@ let findOpenSlot = (function() {
             if (mins < 10) {
                 mins = '0' + mins;
             }
-            convertedMins = Math.floor( hour / 60) + ':' + mins;
+            convertedMins = Math.floor(hour / 60) + ':' + mins;
         } else {
             messages.displayMessage(false, "Something is wrong please contact the Administrator");
-            // some bad value was sent
         }
         return convertedMins;
     } // End minsConverter()
@@ -197,65 +194,5 @@ let findOpenSlot = (function() {
     return {
         matchAvailability: matchAvailability
     }
-
-    /*
-
-[  
-   {  
-      "userId":1,
-      "availability":[  
-         {  
-            "start":640,
-            "end":720
-         },
-         {  
-            "start":600,
-            "end":660
-         }
-      ]
-   },
-   {  
-      "userId":2,
-      "availability":[  
-         {  
-            "start":480,
-            "end":600
-         },
-         {  
-            "start":540,
-            "end":630
-         }
-      ]
-   },
-   {  
-      "userId":6,
-      "availability":[  
-         {  
-            "start":640,
-            "end":720
-         },
-         {  
-            "start":600,
-            "end":660
-         }
-      ]
-   },
-   {  
-      "userId":7,
-      "availability":[  
-         {  
-            "start":480,
-            "end":600
-         },
-         {  
-            "start":780,
-            "end":930
-         }
-      ]
-   }
-]
-
-
-    */
 
 })();

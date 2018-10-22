@@ -1,111 +1,372 @@
-    {
-        "success": true,
-        "data": [
-            {
-                "userId": 1,
-                "name": "Jonathan Granger",
-                "appointments": [
-                    {
-                        "subject" : "Discuss something 1",
-                        "day" : "4",
-                        "start" : "8:00",
-                        "end" : "14:00"
-                    },
-                    {
-                        "subject" : "Discuss something 2",
-                        "day" : "11",
-                        "start" : "0:00",
-                        "end" : "1:00"
-                    }
-                ]
-            },
-            {
-                "userId": 2,
-                "name": "Trenoile Rathionex",
-                "appointments": [
-                    {
-                        "subject" : "Work something 1",
-                        "day" : "8",
-                        "start" : "11:00",
-                        "end" : "12:00"
-                    },
-                    {
-                        "subject" : "Work something 2",
-                        "day" : "27",
-                        "start" : "14:00",
-                        "end" : "23:30"
-                    }
-                ]
-            },
-            {
-                "userId": 3,
-                "name": "Raniertri Levariout",
-                "appointments": []
-            },
-            {
-                "userId": 4,
-                "name": "Leonidas Perez",
-                "appointments": []
-            },
-            {
-                "userId": 5,
-                "name": "Chaoie Gwentred",
-                "appointments": []
-            },
-            {
-                "userId": 6,
-                "name": "Emilia Ruth",
-                "appointments": [
-                    {
-                        "subject" : "Develop 1",
-                        "day" : "19",
-                        "start" : "10:40",
-                        "end" : "11:40"
-                    },
-                    {
-                        "subject" : "Develop 2",
-                        "day" : "31",
-                        "start" : "23:00",
-                        "end" : "24:00"
-                    }
-                ]
-            },
-            {
-                "userId": 7,
-                "name": "Gina Lessen",
-                "appointments": [
-                    {
-                        "subject" : "Planning  1",
-                        "day" : "25",
-                        "start" : "1:30",
-                        "end" : "2:00"
-                    },
-                    {
-                        "subject" : "Planning 2",
-                        "day" : "17",
-                        "start" : "10:30",
-                        "end" : "12:00"
-                    }
-                ]
-            },
-            {
-                "userId": 8,
-                "name": "Adda Rukya",
-                "appointments": [
-
-                    {
-                        "subject" : "Merging  1",
-                        "day" : "15",
-                        "start" : "3:30",
-                        "end" : "4:00"
-                    },
-                    {
-                        "subject" : "Merging 2",
-                        "day" : "23",
-                        "start" : "11:00",
-                        "end" : "11:30"
-                    }
-                ]
-            }
-        ]
-    }
+{  
+    "success":true,
+    "data":[  
+       {  
+          "userId":1,
+          "name":"Jonathan Granger",
+          "appointments":[  
+             {  
+                "subject":"Discuss something 1",
+                "day":"8",
+                "start":"1:00",
+                "end":"6:00"
+             },
+             {  
+                "subject":"Discuss something 2",
+                "day":"8",
+                "start":"8:00",
+                "end":"15:00"
+             },
+             {  
+                "subject":"Discuss something 3",
+                "day":"8",
+                "start":"16:00",
+                "end":"18:00"
+             }
+          ]
+       },
+       {  
+          "userId":2,
+          "name":"Trenoile Rathionex",
+          "appointments":[  
+             {  
+                "subject":"Work something 1",
+                "day":"8",
+                "start":"5:30",
+                "end":"8:30"
+             },
+             {  
+                "subject":"Work something 2",
+                "day":"8",
+                "start":"9:00",
+                "end":"11:00"
+             },
+             {  
+                "subject":"Work something 3",
+                "day":"8",
+                "start":"14:00",
+                "end":"16:00"
+             },
+             {  
+                "subject":"Work something 4",
+                "day":"8",
+                "start":"18:30",
+                "end":"23:00"
+             },
+             {  
+                "subject":"Work something 5",
+                "day":"27",
+                "start":"8:00",
+                "end":"10:30"
+             }
+          ]
+       },
+       {  
+          "userId":3,
+          "name":"Raniertri Levariout",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":4,
+          "name":"Leonidas Perez",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":5,
+          "name":"Chaoie Gwentred",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":6,
+          "name":"Emilia Ruth",
+          "appointments":[  
+             {  
+                "subject":"Develop 1",
+                "day":"8",
+                "start":"4:00",
+                "end":"6:30"
+             },
+             {  
+                "subject":"Develop 2",
+                "day":"8",
+                "start":"7:30",
+                "end":"10:00"
+             },
+             {  
+                "subject":"Develop 3",
+                "day":"8",
+                "start":"12:30",
+                "end":"15:00"
+             },
+             {  
+                "subject":"Develop 4",
+                "day":"8",
+                "start":"15:30",
+                "end":"17:00"
+             },
+             {  
+                "subject":"Develop 5",
+                "day":"8",
+                "start":"17:30",
+                "end":"19:40"
+             },
+             {  
+                "subject":"Develop 6",
+                "day":"11",
+                "start":"7:30",
+                "end":"10:00"
+             },
+             {  
+                "subject":"Develop 7",
+                "day":"14",
+                "start":"12:30",
+                "end":"15:00"
+             },
+             {  
+                "subject":"Develop 8",
+                "day":"17",
+                "start":"15:30",
+                "end":"17:00"
+             },
+             {  
+                "subject":"Develop 9",
+                "day":"19",
+                "start":"17:30",
+                "end":"19:40"
+             },
+             {  
+                "subject":"Develop 10",
+                "day":"31",
+                "start":"10:30",
+                "end":"12:00"
+             }
+          ]
+       },
+       {  
+          "userId":7,
+          "name":"Gina Lessen",
+          "appointments":[  
+             {  
+                "subject":"Planning  1",
+                "day":"8",
+                "start":"9:00",
+                "end":"13:30"
+             },
+             {  
+                "subject":"Planning  2",
+                "day":"8",
+                "start":"14:00",
+                "end":"15:00"
+             },
+             {  
+                "subject":"Planning 3",
+                "day":"8",
+                "start":"16:00",
+                "end":"18:30"
+             }
+          ]
+       },
+       {  
+          "userId":8,
+          "name":"Adda Rukya",
+          "appointments":[  
+             {  
+                "subject":"Merging  1",
+                "day":"8",
+                "start":"5:30",
+                "end":"7:30"
+             },
+             {  
+                "subject":"Merging 2",
+                "day":"8",
+                "start":"9:00",
+                "end":"18:50"
+             },
+             {  
+                "subject":"Merging 3",
+                "day":"1",
+                "start":"23:30",
+                "end":"23:50"
+             },
+             {  
+                "subject":"Merging 4",
+                "day":"31",
+                "start":"23:30",
+                "end":"23:50"
+             }
+          ]
+       },
+       {  
+          "userId":9,
+          "name":"Reyna Gerson",
+          "appointments":[  
+             {  
+                "subject":"Merging  1",
+                "day":"8",
+                "start":"7:30",
+                "end":"10:30"
+             },
+             {  
+                "subject":"Merging  1",
+                "day":"8",
+                "start":"13:30",
+                "end":"15:30"
+             },
+             {  
+                "subject":"Merging 2",
+                "day":"23",
+                "start":"23:30",
+                "end":"23:50"
+             }
+          ]
+       },
+       {  
+          "userId":10,
+          "name":"Raniertri Levariout",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":11,
+          "name":"Agsinon Chuppenter",
+          "appointments":[  
+             {  
+                "subject":"Deals  1",
+                "day":"8",
+                "start":"8:00",
+                "end":"10:00"
+             },
+             {  
+                "subject":"Deals  1",
+                "day":"8",
+                "start":"14:00",
+                "end":"16:00"
+             },
+             {  
+                "subject":"Deals 2",
+                "day":"11",
+                "start":"23:30",
+                "end":"23:50"
+             }
+          ]
+       },
+       {  
+          "userId":12,
+          "name":"Lolein Trundra",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":13,
+          "name":"Maroitte Mayeiks",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":14,
+          "name":"Tryliol Freatioals",
+          "appointments":[  
+ 
+          ]
+       },
+       {  
+          "userId":15,
+          "name":"Sergeinus Pettrelli",
+          "appointments":[  
+             {  
+                "subject":"Toys  1",
+                "day":"8",
+                "start":"9:00",
+                "end":"10:00"
+             },
+             {  
+                "subject":"Toys  2",
+                "day":"8",
+                "start":"11:00",
+                "end":"12:00"
+             },
+             {  
+                "subject":"Toys  3",
+                "day":"8",
+                "start":"12:30",
+                "end":"13:00"
+             },
+             {  
+                "subject":"Toys  4",
+                "day":"8",
+                "start":"13:30",
+                "end":"15:30"
+             },
+             {  
+                "subject":"Toys  6",
+                "day":"8",
+                "start":"16:00",
+                "end":"16:30"
+             },
+             {  
+                "subject":"Toys  7",
+                "day":"8",
+                "start":"17:00",
+                "end":"17:30"
+             },
+             {  
+                "subject":"Toys  8",
+                "day":"8",
+                "start":"18:00",
+                "end":"18:30"
+             },
+             {  
+                "subject":"Toys  9",
+                "day":"3",
+                "start":"9:30",
+                "end":"10:00"
+             },
+             {  
+                "subject":"Toys 10",
+                "day":"11",
+                "start":"23:30",
+                "end":"23:50"
+             }
+          ]
+       },
+       {  
+          "userId":16,
+          "name":"Cecilia Quacker",
+          "appointments":[  
+             {  
+                "subject":"Meals  1",
+                "day":"8",
+                "start":"9:00",
+                "end":"10:30"
+             },
+             {  
+                "subject":"Meals 2",
+                "day":"8",
+                "start":"11:30",
+                "end":"13:50"
+             },
+             {  
+                "subject":"Meals 3",
+                "day":"8",
+                "start":"14:00",
+                "end":"15:00"
+             },
+             {  
+                "subject":"Meals 4",
+                "day":"18",
+                "start":"23:30",
+                "end":"23:50"
+             }
+          ]
+       }
+    ]
+ }

@@ -1,5 +1,37 @@
-/*** look and feel ***/
-
-.bookAppointment {
-    
+#calendar-openSlot-component li {
+    border: 0.0625em solid #ccc;
+}
+#calendar-openSlot-component ul.weekdays {
+    background: rgb(94, 97, 143);
+}
+#calendar-openSlot-component ul.weekdays li {
+    color: #fff;
+}
+#calendar-openSlot-component .date {
+    color: #000;
+}
+#calendar-openSlot-component .other-month {
+    background: #e6e6e6;
+}
+#calendar-openSlot-component .other-month .date{
+    color: #999;
+}
+#calendar-openSlot-component #app-messages {
+    background: #f5f5dc;
+}
+#calendar-openSlot-component .app-messages-error {
+    border: 0.1875em solid #ff0000;
+    color: #ff0000;
+}
+#calendar-openSlot-component .app-messages-sucess {
+    border: 0.1875em solid #00dd63;
+    color: #00dd63;
+}
+.tooltip:hover .tooltip-message {
+    color: #000;
+    background: #fff;
+    border: 0.0625em solid #ccc;
+}
+.tooltip-message .tooltip-title {
+    font-weight: bold;
 }

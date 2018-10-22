@@ -1,8 +1,12 @@
+/*
+  This file handles all the modal or pop up messages might be needed.
+*/
+
 let messages = (function(){
 
     function displayMessage(type, message) {
         let modalMessages = document.getElementById('app-messages');
-        modalMessages.classList.remove('hidden');
+        document.getElementById('app-messages').style.opacity = '1';
 
         if (type) {
             modalMessages.classList.remove('app-messages-error');
@@ -14,7 +18,9 @@ let messages = (function(){
 
         modalMessages.innerHTML = message;
 
-        setTimeout(() => modalMessages.classList.add('hidden'),2000);
+        setTimeout(() =>{ 
+            document.getElementById('app-messages').style.opacity = '0';
+        },2500);
     }
 
     return {

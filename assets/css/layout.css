@@ -1,17 +1,12 @@
-/* position and arrange */
-
 .l-float-right {
     float: right;
 }
-
 .l-float-left {
     float: left;
 }
-
 .l-width-all {
     width: 100%;
 }
-
 .hidden {
     display:none;
 }
