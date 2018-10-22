@@ -44,7 +44,7 @@ let findOpenSlot = (function() {
         // checkin and checkout represents the working time
         let checkIn = minsConverter(8, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
         let checkOut = minsConverter(18, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
-        let matchedElements = [];
+        let matchedElements = []; 
         let freeSchedule = [];
 
         let usersWithAppointments = resp.filter(user => {
@@ -65,56 +65,40 @@ let findOpenSlot = (function() {
                 // If all the users are available, matchedElements is reset to allow to find more matches with the same query
                 matchedElements = [];
             } else {
-                userMatch.push(findOpenSlots(init, duration));
+                // Otherwise continue looking for matches
+                findOpenSlots(init, duration)
             }
             ++init;
             ++duration;
         }
 
-        let cleanArrUsersAvailable = userMatch.filter(people => people.length > 0);
-        //     console.log('xxxxxxxxxxxxx FINAL VAL xxxxxxxxxxxxxxxxxxx');
-        //    // console.log(cleanArrUsersAvailable);
-        //     console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-        //alert(cleanArrUsersAvailable);
+        // if (matchedElements.length) {
+        //     matchedElements = userMatch.filter(people => people.length > 0);
+        // }
 
-        function getUsersMatchDay(appointments) {
+        //HELP FUNCTIONS
+        function getUsersMatchDay(appointments) { // Gets the users that has an appointment in the selected day
             let someDayMatch = false;
-            appointments.forEach(days => { //cambiar a for y decir por que....more extensive than a forEach but performs quickier
-                if (days.day == currentDay) {
+            for (let i=0; i < appointments.length; i++) {
+                if (appointments[i].day == currentDay) {
                     someDayMatch = true;
                 }
-            });
+            }
             return someDayMatch;
         } //End matchAvailability() > getUsersMatchDay();
 
         function findOpenSlots(ini, duration) {
             for (let j = 0; j < arrAvailabilityLength; j++) {
-                // console.log(arrAvailability[j].userId); //aa <= ini && bb <= duration &&
-                //    console.log("INI: " +  ini);
-                //    console.log("INIRANGE: " + iniRange);
-                //    console.log("DURATION: " + duration);
-                //    console.log("ENDRANGE: " + endRange);
-                if (userMatchedId.indexOf(arrAvailability[j].userId) >= 0 && endRange > ini) {
-                    /* This is to avoid doing unnecessary iterations as long 
-                      as the ini and duration values are in the range of the respective person matched */
-                    //   console.log('*************************se debe brincar el objeto en cuestion************');
-                } else {
+                if (userMatchedId.indexOf(arrAvailability[j].userId) <= 0 && endRange < ini) {
+                    /* This If conditional is to avoid doing unnecessary iterations as long as the
+                       ini and duration values are in the range of the respective person matched 
+                    */
                     if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
-                        //   console.log('IS A MATCH');                      
-                        //   console.log("ini: " + ini);
-                        //   console.log("duration: " + duration) 
-                        //   console.log(arrAvailability[j]);   
                         matchedElements.push(arrAvailability[j]);
-                        //   console.log(matchedElements);           
-                        //   console.log('****************************');    
                     }
                 }
             }
-            // console.log(':::::::::::::::::::::::::::');
-            // console.log(matchedElements); 
-            // console.log(':::::::::::::::::::::::::::');
             if (matchedElements.length === arrAvailabilityLength) {
-                console.log("***********************FULL MATCH YATAHHH*****************");
                 userMatchedId = [];
                 freeSchedule.push({
                     "ini": minsConverter(ini, 'turn'),
@@ -122,33 +106,18 @@ let findOpenSlot = (function() {
                 });
                 return matchedElements;
             } else {
-                // console.log('-----still no full matches--------');
                 if (userMatchedId.length) { // Review if it has been matches before perform unnecessary operations
-                    // console.log('--no full matches but some matches---');
-                    // console.log("ini: " +  ini);
-                    // console.log("iniRange: " + iniRange);
-                    // console.log("duration: " + duration);
-                    // console.log("endRange: " + endRange);
-                    // console.log(userMatchedId);
-                    // console.log(findUserIdsMatches());
-                    // console.log('****************************************');
                     if (iniRange < ini && endRange < duration && findUserIdsMatches()) {
-                        // console.log('Reset until the range is fulfilled');
-                        // console.log(userMatchedId);
                         userMatchedId = [];
-                        // console.log('****************************************');
                     }
                 }
                 return [];
             }
 
-            //Help function
+            // HELP FUNCTIONS
             function findUserIdsMatches() {
                 let proveVal;
-                // console.log('::::::::::::::::::::::::');
                 for (let i = 0; i < arrAvailabilityLength; i++) {
-                    // console.log(userMatchedId);
-                    // console.log(arrAvailability[i].userId);
                     if (userMatchedId.indexOf(arrAvailability[i].userId) >= 0) {
                         proveVal = true;
                         break;
@@ -165,47 +134,24 @@ let findOpenSlot = (function() {
             return person.availability.some(bookDay => {
                 let bookDayStart = bookDay.start;
                 let bookDayEnd = bookDay.end;
-                //  console.log(person);
-                //  console.log(bookDay);
-                //  console.log("ini: " + ini);
-                //  console.log("duration: " + duration)
-                //  console.log("start: " + bookDayStart);                 
-                //  console.log("end: " + bookDayEnd);
 
                 if (ini >= bookDayStart && duration <= bookDayEnd) {
                     userMatchedId.push(person.userId);
                     iniRange = bookDayStart;
                     endRange = bookDayEnd;
-                    // console.log('ini mayor o igual start y duration menor o igual end');                    
-                    // console.log('person.userId: ' + person.userId);
-                    // console.log('userMatchedId: ' + userMatchedId);
-                    // console.log(person);  
-                    // console.log('****************************'); 
                     return true;
 
                 } else if (ini > bookDayStart && duration > bookDayEnd && ini < bookDayEnd && (bookDayEnd - ini) >= (duration - ini)) {
                     userMatchedId.push(person.userId);
                     iniRange = bookDayStart;
                     endRange = bookDayEnd;
-                    //    console.log('ini mayor start y duration mayor end');                   
-                    //    console.log('person.userId: ' + person.userId);
-                    //    console.log('userMatchedId: ' + userMatchedId);
-                    //    console.log(person);  
-                    //    console.log('****************************'); 
                     return true;
                 } else if (ini < bookDayStart && duration < bookDayEnd && duration > bookDayStart && (duration - bookDayStart) >= (duration - ini)) {
                     userMatchedId.push(person.userId);
                     iniRange = bookDayStart;
                     endRange = bookDayEnd;
-                    // console.log('ini menor start y duration mayor start');                    
-                    // console.log('person.userId: ' + person.userId);
-                    // console.log('userMatchedId: ' + userMatchedId);
-                    // console.log(person);  
-                    // console.log('****************************'); 
                     return true;
                 } else {
-                    // console.log('nothing');
-                    // console.log('****************************');
                     return false;
                 }
             });
@@ -234,9 +180,9 @@ let findOpenSlot = (function() {
 
     } //End matchAvailability()
 
-    //FUNCTIONS HELPERS
-    // convert typed duration to mins, if necessary
+    // HELP FUNCTIONS   
     function minsConverter(hour, hourType) {
+        // This will transform hours (hh:mm) into minutes and the other way around
         if (!isNaN(hour)) {
             hour = hour.toString();
         }
@@ -264,13 +210,8 @@ let findOpenSlot = (function() {
             convertedMins = Math.floor(hour / 60) + ':' + mins;
         } else {
             messages.displayMessage(false, "Something is wrong please contact the Administrator");
-            // some bad value was sent
         }
         return convertedMins;
     } // End minsConverter()
-
-    return {
-        matchAvailability: matchAvailability
-    }
 
 })();
