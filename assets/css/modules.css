@@ -1,7 +1,7 @@
 /*** reusable modules ***/
 
 #calendar-openSlot-component h1 {
-    margin: 15px 0px;
+    margin: 0.9375em 0;
     text-align: center;
 }
 
@@ -12,30 +12,30 @@
 
     #calendar-openSlot-component li {
         box-sizing: border-box;
-        border: 1px solid #ccc;
+        border: 0.0625em solid #ccc;
         display: block;
         float: left;
         width: 14.2857142857%;
-        padding: 5px;
-        margin-right: -1px;
+        padding: 0.3125em;
+        margin-right: -0.0625em;
     }
 
     #calendar-openSlot-component ul.weekdays {
-        height: 40px;
+        height: 2.5em;
         background: rgb(94, 97, 143);
     }
 
     #calendar-openSlot-component ul.weekdays li {
         text-align: center;
         text-transform: uppercase;
-        line-height: 20px;
+        line-height: 1.25em;
         border: none;
-        padding: 10px 6px;
+        padding: 0.625em 0.375em;
         color: #fff;
     }
 
     #calendar-openSlot-component .days li {
-        height: 180px;
+        height: 11.25em;
     }    
 
     #calendar-openSlot-component .date {
@@ -43,7 +43,7 @@
         color: #000;
         float: right;
         font-weight: bold;
-        padding: 5px;
+        padding: 0.3125em;
     }
 
     #calendar-openSlot-component .other-month {
@@ -62,30 +62,30 @@
    }
 
    #calendar-openSlot-component #app-messages {
-        width: 600px;
+        width: 37.5em;
         margin: 0 auto;
         text-align: center;
         background: beige;
-        -webkit-border-bottom-right-radius: 5px;
-        -webkit-border-bottom-left-radius: 5px;
-        -moz-border-radius-bottomright: 5px;
-        -moz-border-radius-bottomleft: 5px;
-        border-bottom-right-radius: 5px;
-        border-bottom-left-radius: 5px;
+        -webkit-border-bottom-right-radius: 0.3125em;
+        -webkit-border-bottom-left-radius: 0.3125em;
+        -moz-border-radius-bottomright: 0.3125em;
+        -moz-border-radius-bottomleft: 0.3125em;
+        border-bottom-right-radius: 0.3125em;
+        border-bottom-left-radius: 0.3125em;
         border-top: none;
-        padding: 10px 0px 20px 0px;
+        padding: 0.625em 0 1.25em 0;
         opacity: 0;
         transition: 0.5s opacity;
    }
 
    #calendar-openSlot-component .app-messages-error {
-        border: 3px solid red;
-        color: red;
+        border: 0.1875em solid #ff0000;
+        color: #ff0000;
     }
 
     #calendar-openSlot-component .app-messages-sucess {
-        border: 3px solid rgb(0, 221, 99);
-        color: rgb(0, 221, 99);;
+        border: 0.1875em solid #00dd63;
+        color: #00dd63;
     }
 
 
@@ -106,12 +106,12 @@
             display: block;
             width: auto;
             height: auto;
-            padding: 10px;
+            padding: 0.625em;
             color: #000;
             background: #fff;
             position: absolute;
-            border: 1px solid #ccc;
-            font-size: 12px;
+            border: 0.0625em solid #ccc;
+            font-size: 0.75em;
             top: 15%;
             left:0%;
         }
@@ -122,7 +122,7 @@
 
         .tooltip-message label {
             display: block;
-            padding:5px 0;
+            padding:0.3125em 0;
          }
 
          .tooltip-message input {
@@ -134,12 +134,12 @@
         }
 
        .tooltip-message .find-slot {
-           margin:10px 0;
+           margin:0.625em 0;
            cursor: pointer;
        }
 
        .js-form-book-appointment{
-           margin:10px 0;
+           margin:0.625em 0;
        }
 
        .tooltip-message .set-time{
@@ -147,7 +147,7 @@
        }
 
        .book-appointment{
-           margin:10px 0;
+           margin:0.625em 0;
        }
 
        .messages-modal {

@@ -1,6 +1,10 @@
 PLEASE READ THE SERVICE DEFINITION IN THE COMMENTS OF assets/js/fetchUsers.js
 =============================================================================
 
+THE DAY WITH TEST CASES IS 8
+
+=============================================================================
+
 THIS FILES CONTAINS:
 
 I.- USER CASE DESCRIPTION

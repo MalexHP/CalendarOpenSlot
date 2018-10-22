@@ -129,7 +129,7 @@ let usersAppointments = (function() {
                         let availabilityDates = findOpenSlot.matchAvailability(objConfig); 
                         let btnBook = valsMatchedUSersBook(availabilityDates, identifier); // Retrieves the UI with respective information, after query
                         // If there are matches, it will render a different tooltip UI in order to choose open slots and book the appointment
-                        if (availabilityDates.length) {
+                        if (availabilityDates[1].usersAvailable) {
                             let selectOpenSlots;
                             dayNode.querySelector('.js-tooltip-title').innerHTML = 'The team is available';
                             dayNode.querySelector('.js-tooltip-title').style.color = 'green';
@@ -140,9 +140,12 @@ let usersAppointments = (function() {
                             document.getElementById(`js-book-availability-${identifier}`)
                                 .addEventListener('click', (event) => validateAndPost(event, identifier, selectOpenSlots));
                         } else {
+                            window.scrollTo(0,0);
+                            document.getElementById(`duration-${identifier}`).value = '';
                             messages.displayMessage(false, 'Sorry, there are no open slots');
                         }
                     } else {
+                        window.scrollTo(0,0);
                         messages.displayMessage(false, 'Please set a Duration');
                     }
                 } // End  tooltipToBookAndBtnEvents() > queryAndResponseOpenSlots()
@@ -161,8 +164,9 @@ let usersAppointments = (function() {
                         } else {
                             totalUsersAvailable = availabilityDates[i].usersAvailable;
                         }
+                        totalUsersAvailable > 1 ? hasHave = 'have' : hasHave = 'has';
                         templateForBooking = `                      
-                                    <label>${totalUsersAvailable} users have limited time today.</label>
+                                    <label>${totalUsersAvailable} users ${hasHave} open slots:</label>
                                     <select id='dates-available-${identifier}'>
                                          <option>Select Open Slot</option>
                                          ` + scheduleOptions + `
@@ -179,6 +183,8 @@ let usersAppointments = (function() {
                        Simulates that the Post is successful
                     */
                     let classIdentifier = event.target.classList[1];
+                    
+                    window.scrollTo(0,0);
                    
                     if (classIdentifier === 'team') {
                         let hourIni = document.getElementById(`setTime-ini-${identifier}`);

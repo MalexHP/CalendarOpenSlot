@@ -19,7 +19,6 @@
     
             objConfig = {
                 "currentDay": currentDay,
-                "event": event,
                 "localData": localData,
                 "durationTime": durationTime,
                 "minsHours": minsHours
@@ -27,47 +26,47 @@
 */
 
 let findOpenSlot = (function() {
-    let userMatch = [];
-    let userMatchedId = [];
     /* iniRange and  endRange will be set once the first match occurred, so the iteration for this object will be avoided 
        untill ini and duration are out of range, meaning that there are no intersections 
     */
+    let matchedElementsCounter;
     let iniRange = 0,
         endRange = 0;
 
-    function matchAvailability(objConfig) {
+    function matchAvailability(objConfig) { console.log(objConfig);
         let resp = JSON.parse(JSON.stringify(objConfig.localData));
         let currentDay = objConfig.currentDay;
-        let event = objConfig.event;
-        let duration = objConfig.durationTime; // init and duration is the range used to find intersections
-        let init = 0;
         // checkin and checkout represents the working time
         let checkIn = minsConverter(8, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
         let checkOut = minsConverter(18, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
-        let matchedElements = []; 
-        let freeSchedule = [];
-
+        let init = checkIn; // init is used as the starting point to find an intersection in the time range of the user's availability
+        let duration = checkIn + minsConverter(parseInt(objConfig.durationTime), objConfig.minsHours); // duration is the end point of the intersection, taking care of the duration range set in the query        
+        let matchedElements = []; // This array will hold all the open slots        
+        let openSlots = [];
+        let usersAvailable;
         let usersWithAppointments = resp.filter(user => {
             /* This gets all the users that has an booked appointment,
-               from here the script will try to find available time according to the duration set and the chosen day
+               from here the script will try to find available time according to the duration set and the chosen day.
+               Caveat: Will return the user with at least one matched day, but appointments has also other days.
+               This can be fixed redefining the dummy-data json.
+               This is fixed provisionally in getUsersMatchDay()
             */ 
-            if (user.appointments.length) {
+            if (user.appointments.length) { // The {} could be omitted, but I think is a good practice to use them to define the block   
                 return getUsersMatchDay(user.appointments);
             }
         });
-
-        // Creates a formated object neede for future work from the users with booked appointments        
+        console.log(usersWithAppointments);
+        // Creates a formated object, from the users with booked appointments, needed for future work      
         let arrAvailability = usersWithAppointments.map(user => appointmentStartEnd(user));
+ 
         let arrAvailabilityLength = arrAvailability.length; // This catch the length, because the value is used more than once and this helps performance
-
-        for (let i = checkIn; i < checkOut; i++) { 
-            if (matchedElements.length === usersWithAppointments.length) { 
-                // If all the users are available, matchedElements is reset to allow to find more matches with the same query
-                matchedElements = [];
-            } else {
-                // Otherwise continue looking for matches
-                findOpenSlots(init, duration)
-            }
+        
+        for (let i = checkIn; i <= checkOut; i++) { 
+            /*
+              This loop will iterate all the working day range, to find all possible intersections according to duration.
+              One person could have more than one open slot, that is why the loop does not break.
+            */
+            findOpenSlots(init, duration)
             ++init;
             ++duration;
         }
@@ -76,12 +75,23 @@ let findOpenSlot = (function() {
         //     matchedElements = userMatch.filter(people => people.length > 0);
         // }
 
+        openSlots.length ? usersAvailable = arrAvailabilityLength : usersAvailable = 0;
+
         //HELP FUNCTIONS
         function getUsersMatchDay(appointments) { // Gets the users that has an appointment in the selected day
-            let someDayMatch = false;
+            let someDayMatch = false;            
             for (let i=0; i < appointments.length; i++) {
                 if (appointments[i].day == currentDay) {
                     someDayMatch = true;
+                } else { 
+                    /* This is a cheap way to fix the issue with the structure of the data received, this approach could be better
+                       {
+                           "day": X,
+                           "dayDetails" : [] // Array of all the details of the appointments of the day X (subject, start, end)
+                       }
+                    */
+                    appointments[i].start = 0;
+                    appointments[i].end = 0;
                 }
             }
             return someDayMatch;
@@ -89,29 +99,25 @@ let findOpenSlot = (function() {
 
         function findOpenSlots(ini, duration) {
             for (let j = 0; j < arrAvailabilityLength; j++) {
-                if (userMatchedId.indexOf(arrAvailability[j].userId) <= 0 && endRange < ini) {
-                    /* This If conditional is to avoid doing unnecessary iterations as long as the
-                       ini and duration values are in the range of the respective person matched 
-                    */
-                    if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
-                        matchedElements.push(arrAvailability[j]);
-                    }
+                if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
+                    // console.log('IS A MATCH');
+                    // console.log(arrAvailability[j]);
+                    // console.log(ini);
+                    // console.log(duration);
+                    matchedElements.push(arrAvailability[j]);
                 }
             }
             if (matchedElements.length === arrAvailabilityLength) {
-                userMatchedId = [];
-                freeSchedule.push({
+                // All users have to be available according to the requirement
+                console.log('************ YATHAAA ************')
+                openSlots.push({ //Saves the open slot where all the users with appointments are available for the "duration" time
                     "ini": minsConverter(ini, 'turn'),
                     "end": minsConverter(duration, 'turn')
                 });
-                return matchedElements;
+                matchedElements = [];                
             } else {
-                if (userMatchedId.length) { // Review if it has been matches before perform unnecessary operations
-                    if (iniRange < ini && endRange < duration && findUserIdsMatches()) {
-                        userMatchedId = [];
-                    }
-                }
-                return [];
+                console.log('************ ABORT NO FULL ************')
+                matchedElements = []; // Resets any saved match
             }
 
             // HELP FUNCTIONS
@@ -128,28 +134,21 @@ let findOpenSlot = (function() {
                 return proveVal;
             } //End matchAvailability() > findOpenSlots() > findUserIdsMatches()
 
+            return matchedElements;
+
         } //End matchAvailability() > findOpenSlots();
 
         function findAvailability(person, ini, duration) {
             return person.availability.some(bookDay => {
-                let bookDayStart = bookDay.start;
+                /*
+                    Each user can have more than one appointment in a day,
+                    it is not possible to have two appointments in a day at the same hours,
+                    that is why only it is needed a result (some)
+                */
+                let bookDayStart = bookDay.start; // The bookDay.start and bookDay.end values are catched
                 let bookDayEnd = bookDay.end;
 
                 if (ini >= bookDayStart && duration <= bookDayEnd) {
-                    userMatchedId.push(person.userId);
-                    iniRange = bookDayStart;
-                    endRange = bookDayEnd;
-                    return true;
-
-                } else if (ini > bookDayStart && duration > bookDayEnd && ini < bookDayEnd && (bookDayEnd - ini) >= (duration - ini)) {
-                    userMatchedId.push(person.userId);
-                    iniRange = bookDayStart;
-                    endRange = bookDayEnd;
-                    return true;
-                } else if (ini < bookDayStart && duration < bookDayEnd && duration > bookDayStart && (duration - bookDayStart) >= (duration - ini)) {
-                    userMatchedId.push(person.userId);
-                    iniRange = bookDayStart;
-                    endRange = bookDayEnd;
                     return true;
                 } else {
                     return false;
@@ -170,11 +169,18 @@ let findOpenSlot = (function() {
             }
         } //End matchAvailability() > appointmentStartEnd()
 
+        console.log("openSlots");
+        console.log(openSlots);
+        console.log('arrAvailability');
+        console.log(arrAvailability);
+        console.log("matchedElements");
+        console.log(arrAvailabilityLength);
+
         return [{
-                'dates': freeSchedule
+                'dates': openSlots
             },
             {
-                'usersAvailable': cleanArrUsersAvailable.length
+                'usersAvailable': usersAvailable
             }
         ];
 
@@ -188,7 +194,7 @@ let findOpenSlot = (function() {
         }
         let convertedMins = 0;
         if (hourType === 'mins') {
-            convertedMins = hour;
+            convertedMins = parseInt(hour);
         } else if (hourType === 'hrs') {
             if (hour.includes(':')) {
                 let mins = hour.split(':');
@@ -213,5 +219,9 @@ let findOpenSlot = (function() {
         }
         return convertedMins;
     } // End minsConverter()
+
+    return {
+        matchAvailability: matchAvailability
+    }
 
 })();

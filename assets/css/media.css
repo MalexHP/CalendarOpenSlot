@@ -8,10 +8,10 @@
 
     #calendar-openSlot-component li {
         height: auto;
-        border: 1px solid #eeddee;
+        border: 0.0625em solid #eeddee;
         width: 100%;
-        padding: 10px;
-        margin-bottom: -1px;
+        padding: 0.625em;
+        margin-bottom: -0.0625em;
     }
 
     #calendar-openSlot-component .date {

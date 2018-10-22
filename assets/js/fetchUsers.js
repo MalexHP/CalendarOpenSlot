@@ -19,6 +19,8 @@
    * When N users has more than one appointment on a day, but in different time range,
      because for one user that has two appointments that overlaps in some time is paradoxical.
 
+    ================= The day with test cases is 8 =======================
+
 */
 
 let fetchUsers = (function(){
