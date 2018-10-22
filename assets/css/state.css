@@ -1,5 +1,3 @@
-/*** states and actions ***/
-
 #calendar-openSlot-component .days li:hover {
     background: #eee;
     cursor: pointer;

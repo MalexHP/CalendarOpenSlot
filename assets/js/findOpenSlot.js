@@ -29,10 +29,6 @@ let findOpenSlot = (function() {
     /* iniRange and  endRange will be set once the first match occurred, so the iteration for this object will be avoided 
        untill ini and duration are out of range, meaning that there are no intersections 
     */
-    let matchedElementsCounter;
-    let iniRange = 0,
-        endRange = 0;
-
     function matchAvailability(objConfig) { 
         let resp = JSON.parse(JSON.stringify(objConfig.localData));
         let currentDay = objConfig.currentDay;
@@ -41,6 +37,8 @@ let findOpenSlot = (function() {
         let checkOut = minsConverter(18, 'hrs'); // conversts hh:mm format time to mins, 24 hoursbase
         let init = checkIn; // init is used as the starting point to find an intersection in the time range of the user's availability
         let duration = checkIn + minsConverter(parseInt(objConfig.durationTime), objConfig.minsHours); // duration is the end point of the intersection, taking care of the duration range set in the query        
+        console.log('duration');
+        console.log(duration);
         let matchedElements = []; // This array will hold all the open slots        
         let openSlots = [];
         let usersAvailable;
@@ -77,7 +75,16 @@ let findOpenSlot = (function() {
         let finalExecutionTime = endMeasureTime - startMeasureTime; // Execution time test variable
       //  console.log('Execution time: ' + finalExecutionTime); // Execution time test
 
-        openSlots.length ? usersAvailable = arrAvailabilityLength : usersAvailable = 0;
+        if (openSlots.length) {
+            usersAvailable = arrAvailabilityLength;
+            if (minsConverter(openSlots[1].ini, 'hrs') - minsConverter(openSlots[0].ini, 'hrs') === 1 ) {
+              /* This conditional is to fix a bug realted with search using mins or using hours
+              */
+             
+            }
+        } else {
+            usersAvailable = 0; // In case there are no matches, this helps the UI, not the best solution but can be improved
+        }        
 
         //HELP FUNCTIONS
         function getUsersMatchDay(appointments) { // Gets the users that has an appointment in the selected day
@@ -100,9 +107,12 @@ let findOpenSlot = (function() {
         } //End matchAvailability() > getUsersMatchDay();
 
         function findOpenSlots(ini, duration) {
+          //  console.log('******* findOpenSlots ******');
             for (let j = 0; j < arrAvailabilityLength; j++) {
                 if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
+                   // console.log('MATCHES');
                     matchedElements.push(arrAvailability[j]);
+                   // console.log(matchedElements);
                 }
             }
             if (matchedElements.length === arrAvailabilityLength) {
@@ -111,8 +121,13 @@ let findOpenSlot = (function() {
                     "ini": minsConverter(ini, 'turn'),
                     "end": minsConverter(duration, 'turn')
                 });
+                // console.log('**** YATHAA ALL THE MATCHES');
+                // console.log('ini: ' + ini);
+                // console.log('duration: ' + duration);
+                // console.log(openSlots);                
                 matchedElements = [];                
             } else {
+               // console.log('**** NOOOO ');
                 matchedElements = []; // Resets any saved match
             }
 
