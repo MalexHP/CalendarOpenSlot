@@ -1,7 +1,7 @@
 PLEASE READ THE SERVICE DEFINITION IN THE COMMENTS OF assets/js/fetchUsers.js
 =============================================================================
 
-THE DAY WITH TEST CASES IS 8
+THE DAY WITH TEST CASES IS 8, with a duration of 1 hr, also works with 30 mins but there is a bug for the select
 
 =============================================================================
 
@@ -10,6 +10,7 @@ THIS FILES CONTAINS:
 I.- USER CASE DESCRIPTION
 II.- SCAFFOLDING DESCRIPTION
 III.- EXTRA COMMENTS ABOUT THE APPLICATION
+IV.- PERFORMANCE IMPROVEMENT PENDING 
 
 =============================================================================
 
@@ -43,8 +44,6 @@ II.- SCAFFOLDING DESCRIPTION:
 5.- assets/js: Contains all the js files separated un concerns.  Could have been used ES6 export/import 
     but is even less supported as far as I know, for this case a transpiler was needed.
 
-
-
 III.- EXTRA COMMENTS ABOUT THE APPLICATION:
 
 * The UI is responsive, although not all the breaking points where thoroughly adjusted, 
@@ -53,5 +52,16 @@ because is an exercise and I tried to develop it fast.
 * There are more combinations of appointments schedules that were not tested.
 
 * The application still can be optimized.
+
+IV.- PERFORMANCE IMPROVEMENT PENDING 
+
+Once a match is found, the iteration continues even when is possible to jump the matched element until the be out of range.
+Being out of range means there are not going to be intersections (matches), and continues with the next set.
+
+Owed to the time available I could not implement it, but at the end of this exercise,
+I have identified ways to improve many parts of the js code, css and HTML
+
+
+
 
 
