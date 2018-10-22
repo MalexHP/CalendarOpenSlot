@@ -33,7 +33,7 @@ let findOpenSlot = (function() {
     let iniRange = 0,
         endRange = 0;
 
-    function matchAvailability(objConfig) { console.log(objConfig);
+    function matchAvailability(objConfig) { 
         let resp = JSON.parse(JSON.stringify(objConfig.localData));
         let currentDay = objConfig.currentDay;
         // checkin and checkout represents the working time
@@ -55,12 +55,14 @@ let findOpenSlot = (function() {
                 return getUsersMatchDay(user.appointments);
             }
         });
-        console.log(usersWithAppointments);
+
         // Creates a formated object, from the users with booked appointments, needed for future work      
         let arrAvailability = usersWithAppointments.map(user => appointmentStartEnd(user));
  
         let arrAvailabilityLength = arrAvailability.length; // This catch the length, because the value is used more than once and this helps performance
         
+        let startMeasureTime = new Date().getTime(); // Execution time test variable
+
         for (let i = checkIn; i <= checkOut; i++) { 
             /*
               This loop will iterate all the working day range, to find all possible intersections according to duration.
@@ -71,9 +73,9 @@ let findOpenSlot = (function() {
             ++duration;
         }
 
-        // if (matchedElements.length) {
-        //     matchedElements = userMatch.filter(people => people.length > 0);
-        // }
+        let endMeasureTime = new Date().getTime(); // Execution time test variable
+        let finalExecutionTime = endMeasureTime - startMeasureTime; // Execution time test variable
+      //  console.log('Execution time: ' + finalExecutionTime); // Execution time test
 
         openSlots.length ? usersAvailable = arrAvailabilityLength : usersAvailable = 0;
 
@@ -90,8 +92,8 @@ let findOpenSlot = (function() {
                            "dayDetails" : [] // Array of all the details of the appointments of the day X (subject, start, end)
                        }
                     */
-                    appointments[i].start = 0;
-                    appointments[i].end = 0;
+                    appointments[i].start = 1; // Nobody makes appointments of work at 1:00 am
+                    appointments[i].end = 1;
                 }
             }
             return someDayMatch;
@@ -100,39 +102,19 @@ let findOpenSlot = (function() {
         function findOpenSlots(ini, duration) {
             for (let j = 0; j < arrAvailabilityLength; j++) {
                 if (matchedElements.indexOf(arrAvailability[j]) === -1 && findAvailability(arrAvailability[j], ini, duration)) {
-                    // console.log('IS A MATCH');
-                    // console.log(arrAvailability[j]);
-                    // console.log(ini);
-                    // console.log(duration);
                     matchedElements.push(arrAvailability[j]);
                 }
             }
             if (matchedElements.length === arrAvailabilityLength) {
                 // All users have to be available according to the requirement
-                console.log('************ YATHAAA ************')
                 openSlots.push({ //Saves the open slot where all the users with appointments are available for the "duration" time
                     "ini": minsConverter(ini, 'turn'),
                     "end": minsConverter(duration, 'turn')
                 });
                 matchedElements = [];                
             } else {
-                console.log('************ ABORT NO FULL ************')
                 matchedElements = []; // Resets any saved match
             }
-
-            // HELP FUNCTIONS
-            function findUserIdsMatches() {
-                let proveVal;
-                for (let i = 0; i < arrAvailabilityLength; i++) {
-                    if (userMatchedId.indexOf(arrAvailability[i].userId) >= 0) {
-                        proveVal = true;
-                        break;
-                    } else {
-                        proveVal = false;
-                    }
-                }
-                return proveVal;
-            } //End matchAvailability() > findOpenSlots() > findUserIdsMatches()
 
             return matchedElements;
 
@@ -167,15 +149,39 @@ let findOpenSlot = (function() {
                 "userId": user.userId,
                 "availability": availability
             }
-        } //End matchAvailability() > appointmentStartEnd()
+        } //End matchAvailability() > appointmentStartEnd(
 
-        console.log("openSlots");
-        console.log(openSlots);
-        console.log('arrAvailability');
-        console.log(arrAvailability);
-        console.log("matchedElements");
-        console.log(arrAvailabilityLength);
+        // function appointmentStartEnd(user) {
+        //     let availability = {};
+        //     let availabilityArr = [];
+        //     let userAppntm = user.appointments;
+        //     for (let i=0; i < userAppntm.length; i++) {
+        //         let iniVal = minsConverter(userAppntm[i].start, 'hrs');
+        //         let endVal = minsConverter(userAppntm[i].end, 'hrs');                
+        //         let endAvailable;
+        //         let iniAvailable = userAppntm[i].end;
+        //         if ((i + 1) < userAppntm.length) {    
+        //             let iniValFuture = minsConverter(userAppntm[i + 1].start, 'hrs');
+        //             let endValFuture = minsConverter(userAppntm[i + 1].end, 'hrs');                 
+        //             endAvailable = userAppntm[i + 1].start;  
+        //             if (iniVal >= checkIn && endVal > checkIn && endVal <= checkOut && iniValFuture >= checkIn && endValFuture > checkIn && endValFuture <= checkOut) {
+        //                 availability = {
+        //                     "start": minsConverter(iniAvailable, 'hrs') + 1,
+        //                     "end": minsConverter(endAvailable, 'hrs') - 1,
+        //                   };
+        //                   availabilityArr.push(availability);
+        //             } else {
+        //             }
+        //          }
 
+        //     }
+
+        //     return {
+        //         "userId": user.userId,
+        //         "availability": availabilityArr
+        //     }
+        // } //End matchAvailability() > appointmentStartEnd()
+        
         return [{
                 'dates': openSlots
             },
