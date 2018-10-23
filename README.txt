@@ -55,7 +55,7 @@ because is an exercise and I tried to develop it fast.
 
 IV.- PERFORMANCE IMPROVEMENT PENDING 
 
-Once a match is found, the iteration continues even when is possible to jump the matched element until the be out of range.
+Once a match is found, the iteration continues even when is possible to jump the matched element until be out of range.
 Being out of range means there are not going to be intersections (matches), and continues with the next set.
 
 Owed to the time available I could not implement it, but at the end of this exercise,
